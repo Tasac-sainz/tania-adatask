@@ -34,11 +34,10 @@ const handleListClick = (event) => {
     if (!taskId) {
         return;
     }
-    const completedTask= tasks.find(task => task.id === taskId); 
-    if (completedTask) 
+    const selectTask= tasks.find(task => task.id === taskId); 
+    if (selectTask) 
     tasks.completed= event.target.checked;
-    tasksContainer.innerHTML="";
-    listTasks()
+    
     };
 
 tasksContainer.addEventListener("click", handleListClick);
