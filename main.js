@@ -10,9 +10,10 @@ const tasks = [
   { name: "Aprender cómo se realizan las peticiones al servidor en JavaScript", completed: false, id: 4,},
 ];
 
-
-const listTasks = () => {
-    for (const task of tasks) {
+/* Lógica para tachar/no tachar las tareas en función de si están o no realizadas */
+const listTasks = (tasks) => {
+    tasksContainer.innerHTML="";
+    tasks.forEach ((task) => {
     const newTask= document.createElement("li");
     const newContentTask= document.createTextNode (task.name);
     const checkbox= document.createElement ("input");
@@ -22,22 +23,21 @@ const listTasks = () => {
     newTask.appendChild(checkbox);
     newTask.appendChild(newContentTask);
     tasksContainer.appendChild(newTask);
+    if (task.completed){
+        newTask.classList.add("completed");
+    }
     
-    if (task.completed) {
-        newTask.classList.add("completed")
-    };
-}}
-listTasks();
+})};
+listTasks(tasks);
+
 
 const handleListClick = (event) => {
-    const taskId= parseInt(event.target.id);
-    if (!taskId) {
-        return;
-    }
-    const selectTask= tasks.find(task => task.id === taskId); 
-    if (selectTask) 
-    tasks.completed= event.target.checked;
-    
-    };
 
+    const taskId= parseInt(event.target.id);
+    const indexTask = tasks.findIndex((task) => task.id === taskId);
+    tasks[indexTask].completed = !tasks[indexTask].completed;
+    listTasks(tasks)
+};
 tasksContainer.addEventListener("click", handleListClick);
+
+/* Lógica para añadir tareas a través del formulario */
