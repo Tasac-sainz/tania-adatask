@@ -10,9 +10,11 @@ const tasks = [
   { name: "Aprender cómo se realizan las peticiones al servidor en JavaScript", completed: false, id: 4,},
 ];
 
+
 /* Lógica para tachar/no tachar las tareas en función de si están o no realizadas */
 const listTasks = (tasks) => {
     tasksContainer.innerHTML="";
+
     tasks.forEach ((task) => {
     const newTask= document.createElement("li");
     const newContentTask= document.createTextNode (task.name);
@@ -52,9 +54,9 @@ const handleClickAdd = (event) => {
         completed: false
     }
     tasks.push (newTask);
-    listTasks(tasks);
     inputAdd.value="";
-}
+    listTasks(tasks);
+};
 
 btnAdd.addEventListener("click", handleClickAdd);
 
