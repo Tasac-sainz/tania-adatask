@@ -32,12 +32,29 @@ listTasks(tasks);
 
 
 const handleListClick = (event) => {
-
     const taskId= parseInt(event.target.id);
     const indexTask = tasks.findIndex((task) => task.id === taskId);
     tasks[indexTask].completed = !tasks[indexTask].completed;
     listTasks(tasks)
 };
+
 tasksContainer.addEventListener("click", handleListClick);
 
 /* Lógica para añadir tareas a través del formulario */
+const inputAdd= document.querySelector('.form-input_add');
+const btnAdd= document.querySelector ('.form-btn_submit');
+
+const handleClickAdd = (event) => {
+    event.preventDefault();
+    const newTask= {
+        name: inputAdd.value,
+        id: tasks.length + 1,
+        completed: false
+    }
+    tasks.push (newTask);
+    listTasks(tasks);
+    inputAdd.value="";
+}
+
+btnAdd.addEventListener("click", handleClickAdd);
+
