@@ -3,10 +3,11 @@ console.log("Ready Tania AdaTask");
 
 const tasksContainer=document.querySelector ('.container-tasks_tasks-list');
 
-const tasks = [
-  { name: "Recoger setas en el campo", completed: true, id: 1 },
+const savedTasks= localStorage.getItem ("tasks");                   /* Esta linea sirve para obtener lo guardado en Local Storage */
+const tasks = savedTasks ? JSON.parse(savedTasks) : [              /* con este ternario consigo que revise si hay algo en Local Storage y lo pinte junto con las tareas del array original */
+  { name: "Preparar ruta de senderismo del próximo fin de semana", completed: true, id: 1 },
   { name: "Comprar pilas", completed: true, id: 2 },
-  { name: "Poner una lavadora de blancos", completed: true, id: 3 },
+  { name: "Terminar proyecto final", completed: true, id: 3 },
   { name: "Aprender cómo se realizan las peticiones al servidor en JavaScript", completed: false, id: 4,},
 ];
 
@@ -38,6 +39,7 @@ const handleListClick = (event) => {
     const indexTask = tasks.findIndex((task) => task.id === taskId);
     tasks[indexTask].completed = !tasks[indexTask].completed;
     listTasks(tasks)
+    localStorage.setItem('tasks', JSON.stringify(tasks));                  /* Sirve para actualizar en Local Storage la tarea */
 };
 
 tasksContainer.addEventListener("click", handleListClick);
@@ -56,6 +58,7 @@ const handleClickAdd = (event) => {
     tasks.push (newTask);
     inputAdd.value="";
     listTasks(tasks);
+    localStorage.setItem('tasks', JSON.stringify(tasks));        /* Sirve para guardar en Local Storage la nueva tarea */
 };
 
 btnAdd.addEventListener("click", handleClickAdd);
