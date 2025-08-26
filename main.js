@@ -1,31 +1,15 @@
 "use strict";
 console.log("Ready Tania AdaTask");
 
-const tasksContainer = document.querySelector(".container-tasks_tasks-list");
+let tasksContainer = document.querySelector(".container-tasks_tasks-list");
 
-const savedTasks =
-  localStorage.getItem(
-    "tasks"
-  ); /* Esta linea sirve para obtener lo guardado en Local Storage */
-const tasks = savedTasks
-  ? JSON.parse(savedTasks)
-  : [
-      /* con este ternario consigo que revise si hay algo en Local Storage y lo pinte junto con las tareas del array original */
-      {
-        name: "Preparar ruta de senderismo del próximo fin de semana",
-        completed: true,
-        id: 1,
-      },
-      { name: "Comprar pilas", completed: true, id: 2 },
-      { name: "Terminar proyecto final", completed: true, id: 3 },
-      {
-        name: "Aprender cómo se realizan las peticiones al servidor en JavaScript",
-        completed: false,
-        id: 4,
-      },
+const savedTasks = localStorage.getItem("tasks");            /* Esta linea sirve para obtener lo guardado en Local Storage */
+let tasks = savedTasks ? JSON.parse(savedTasks) : [       /* con este ternario consigo que revise si hay algo en Local Storage y lo pinte junto con las tareas del array original */
+      {name: "Tarea de prueba", completed: true, id: 1},
+      {name: "Tarea de pueba 2", completed: true, id: 2},
     ];
 
-/* Lógica para tachar/no tachar las tareas en función de si están o no realizadas */
+/* Lógica para crear la estructura de las tareas (<li>) */
 const listTasks = (tasks) => {
   tasksContainer.innerHTML = "";
 
@@ -36,8 +20,14 @@ const listTasks = (tasks) => {
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
     checkbox.id = task.id;
+    const deleteBtn = document.createElement("delete-button");
+    deleteBtn.textContent= "🗑️"; 
+    deleteBtn.title= "Borrar tarea";                /* Con esto hacemos que al hacer hover muestre este texto de ayuda */
+    deleteBtn.classList.add("delete")
+    deleteBtn.id = task.id;
     newTask.appendChild(checkbox);
     newTask.appendChild(newContentTask);
+    newTask.appendChild(deleteBtn);
     tasksContainer.appendChild(newTask);
     if (task.completed) {
       newTask.classList.add("completed");
@@ -46,16 +36,23 @@ const listTasks = (tasks) => {
 };
 listTasks(tasks);
 
+/* Lógica para tachar las tareas cuando están realizadas Y TAMBIÉN PARA BORRARLAS ya que el botón creado en JS no es válido para escuchar eventos porque es dinámico, es decir, se crea con cada tarea, de manera que al igual que el checkbox, lo que haremos es escuchar al contenedor y después, discriminar qué hijo ha sido pulsado */
+
 const handleListClick = (event) => {
+  if (event.target.type === 'checkbox') {                           /* Esta es la parte de tachar las tareas completadas */
   const taskId = parseInt(event.target.id);
   const indexTask = tasks.findIndex((task) => task.id === taskId);
   tasks[indexTask].completed = !tasks[indexTask].completed;
-  listTasks(tasks);
-  localStorage.setItem(
-    "tasks",
-    JSON.stringify(tasks)
-  ); /* Sirve para actualizar en Local Storage la tarea */
-};
+  }
+  else if (event.target.classList.contains("delete")) {             /* Aquí borra tareas ---> busca el elem. con la clase delete */
+    const taskId = parseInt (event.target.id);
+    tasks = tasks.filter (task => task.id !== taskId)        /* La manera de borrar es filtrar el array sin la tarea que borramos */
+  }
+  listTasks(tasks);                                           /* Renderizamos la lista de nuevo en el DOM, pero actualizada */
+  localStorage.setItem("tasks", JSON.stringify(tasks));             /* Sirve para actualizar en Local Storage la tarea */
+  
+
+}
 
 tasksContainer.addEventListener("click", handleListClick);
 
@@ -73,10 +70,7 @@ const handleClickAdd = (event) => {
   tasks.push(newTask);
   inputAdd.value = "";
   listTasks(tasks);
-  localStorage.setItem(
-    "tasks",
-    JSON.stringify(tasks)
-  ); /* Sirve para guardar en Local Storage la nueva tarea */
+  localStorage.setItem("tasks", JSON.stringify(tasks));               /* Sirve para guardar en Local Storage la nueva tarea */
 };
 
 btnAdd.addEventListener("click", handleClickAdd);
@@ -91,9 +85,11 @@ const handleClickSearch = (event) => {
   event.preventDefault();
   const textToSearch = searchInput.value.toLowerCase();
   const findTask = tasks.filter((task) =>
-    task.name.toLowerCase().includes(textToSearch)
-  );
+    task.name.toLowerCase().includes(textToSearch));
   listTasks(findTask);
 };
 
 searchForm.addEventListener("submit", handleClickSearch);
+
+
+
