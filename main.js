@@ -63,3 +63,17 @@ const handleClickAdd = (event) => {
 
 btnAdd.addEventListener("click", handleClickAdd);
 
+/* Lógica para buscar tareas a través del formulario de búsqueda */
+
+const searchInput= document.querySelector('.form-tasks_input');
+const searchBtn= document.querySelector('.form-tasks_button');
+const searchForm= document.querySelector('.container-tasks_form-tasks')
+
+const handleClickSearch = (event) => {
+    event.preventDefault();
+    const textToSearch= searchInput.value.toLowerCase();
+    const findTask= tasks.filter(task => task.name.toLowerCase().includes(textToSearch));
+        listTasks(findTask);
+    };
+
+searchForm.addEventListener("submit", handleClickSearch);
